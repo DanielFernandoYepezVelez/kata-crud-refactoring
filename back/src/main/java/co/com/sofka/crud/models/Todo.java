@@ -1,14 +1,18 @@
 package co.com.sofka.crud.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.io.Serializable;
 
-@Entity
-public class Todo {
+@Entity(name="tareas_principales")
+@Table(name="tareas_principales")
+public class Todo implements Serializable {
+
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(unique = true, nullable = false)
     private Long id;
+
+    @Column(nullable = false)
     private String name;
     private boolean completed;
     private String groupListId;
