@@ -3,7 +3,7 @@ package co.com.sofka.crud.models;
 import javax.persistence.*;
 import java.io.Serializable;
 
-@Entity(name="tareas_principales")
+@Entity()
 @Table(name="tareas_principales")
 public class Todo implements Serializable {
 
@@ -14,6 +14,8 @@ public class Todo implements Serializable {
 
     @Column(nullable = false)
     private String name;
+
+    @Column(nullable = false)
     private boolean completed;
     private String groupListId;
 

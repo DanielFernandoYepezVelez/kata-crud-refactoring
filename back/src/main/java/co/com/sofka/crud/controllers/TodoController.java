@@ -3,7 +3,14 @@ package co.com.sofka.crud.controllers;
 import co.com.sofka.crud.models.Todo;
 import co.com.sofka.crud.services.TodoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -19,8 +26,21 @@ public class TodoController {
     }
     
     @PostMapping("/todo")
-    public Todo save(@RequestBody Todo todo){
-        return service.save(todo);
+    public ResponseEntity<Map<String, Object>> save(@RequestBody Todo todo) {
+        Todo nuevoTodo = null;
+        Map<String, Object> response = new HashMap<>();
+
+        try {
+            nuevoTodo = service.save(todo);
+        } catch (DataAccessException e) {
+            response.put("mensaje", "Error En La Consulta O Query Por Que Los Nombres No Coinciden");
+            response.put("error", Objects.requireNonNull(e.getMessage()).concat(": ").concat(e.getMostSpecificCause().getMessage()));
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+
+        response.put("mensaje", "La Tarea Fue Creada Exitosamente!");
+        response.put("todo", nuevoTodo);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @PutMapping("/todo")
