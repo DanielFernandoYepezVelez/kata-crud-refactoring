@@ -17,8 +17,8 @@ import java.util.Objects;
 @CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/api")
 public class TodoController {
-    private static final String MENSAJE = "";
-    private static Map<String, Object> response = new HashMap<>();
+    private static final String MENSAJE = "mensaje";
+    private static final Map<String, Object> RESPONSE = new HashMap<>();
 
     @Autowired
     private TodoService service;
@@ -35,14 +35,14 @@ public class TodoController {
         try {
             nuevoTodo = service.save(todo);
         } catch (DataAccessException e) {
-            response.put(MENSAJE, "Error En La Consulta O Query Por Que Los Nombres No Coinciden");
-            response.put("error", Objects.requireNonNull(e.getMessage()).concat(": ").concat(e.getMostSpecificCause().getMessage()));
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+            RESPONSE.put(MENSAJE, "Error En La Consulta O Query Por Que Los Nombres No Coinciden");
+            RESPONSE.put("error", Objects.requireNonNull(e.getMessage()).concat(": ").concat(e.getMostSpecificCause().getMessage()));
+            return new ResponseEntity<>(RESPONSE, HttpStatus.BAD_REQUEST);
         }
 
-        response.put(MENSAJE, "La Tarea Fue Creada Exitosamente!");
-        response.put("todo", nuevoTodo);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        RESPONSE.put(MENSAJE, "La Tarea Fue Creada Exitosamente!");
+        RESPONSE.put("todo", nuevoTodo);
+        return new ResponseEntity<>(RESPONSE, HttpStatus.CREATED);
     }
 
     @PutMapping("/todo/{id}")
@@ -51,27 +51,45 @@ public class TodoController {
         Todo todoDB = service.get(id);
 
         if (todoDB == null) {
-            response.put(MENSAJE, "Error, No Se Puede Editar La Tarea ID: ".concat(id.toString().concat(" No Existe!")));
-            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+            RESPONSE.put(MENSAJE, "Error, No Se Puede Editar La Tarea ID: ".concat(id.toString().concat(" No Existe!")));
+            return new ResponseEntity<>(RESPONSE, HttpStatus.NOT_FOUND);
         }
 
         try {
             todoDB.setName(todo.getName());
+            todoDB.setCompleted(todo.isCompleted());
             todoActualizado = service.save(todoDB);
         } catch (DataAccessException e) {
-            response.put(MENSAJE, "Error En La Consulta O Query Por Que Los Nombres No Coinciden");
-            response.put("error", Objects.requireNonNull(e.getMessage()).concat(": ").concat(e.getMostSpecificCause().getMessage()));
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+            RESPONSE.put(MENSAJE, "Error En La Consulta O Query Por Que Los Nombres No Coinciden");
+            RESPONSE.put("error", Objects.requireNonNull(e.getMessage()).concat(": ").concat(e.getMostSpecificCause().getMessage()));
+            return new ResponseEntity<>(RESPONSE, HttpStatus.BAD_REQUEST);
         }
 
-        response.put(MENSAJE, "La Tarea Fue Actualizada Exitosamente!");
-        response.put("todo", todoActualizado);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        RESPONSE.put(MENSAJE, "La Tarea Fue Actualizada Exitosamente!");
+        RESPONSE.put("todo", todoActualizado);
+        return new ResponseEntity<>(RESPONSE, HttpStatus.CREATED);
     }
 
-    @DeleteMapping(value = "/{id}/todo")
-    public void delete(@PathVariable("id")Long id){
-        service.delete(id);
+    @DeleteMapping("/todo/{id}")
+    public ResponseEntity<Map<String, Object>> delete(@PathVariable Long id) {
+        Todo todoDB = service.get(id);
+        Map<String, Object> responseDelete = new HashMap<>();
+
+        if (todoDB == null) {
+            responseDelete.put(MENSAJE, "Error, No Se Puede Editar La Tarea ID: ".concat(id.toString().concat(" No Existe!")));
+            return new ResponseEntity<>(responseDelete, HttpStatus.NOT_FOUND);
+        }
+
+        try {
+            service.delete(todoDB.getId());
+        } catch (DataAccessException e) {
+            responseDelete.put(MENSAJE, "Error En La Consulta O Query Por Integridad Referencial");
+            responseDelete.put("error", Objects.requireNonNull(e.getMessage()).concat(": ").concat(e.getMostSpecificCause().getMessage()));
+            return new ResponseEntity<>(responseDelete, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        responseDelete.put(MENSAJE, "La Tarea Fue Eliminada Exitosamente!");
+        return new ResponseEntity<>(responseDelete, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}/todo")
