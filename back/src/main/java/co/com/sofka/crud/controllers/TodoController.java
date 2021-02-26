@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -16,39 +17,56 @@ import java.util.Objects;
 @CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/api")
 public class TodoController {
+    private static final String MENSAJE = "";
+    private static Map<String, Object> response = new HashMap<>();
 
     @Autowired
     private TodoService service;
 
     @GetMapping("/todos")
-    public Iterable<Todo> list(){
+    public List<Todo> list(){
         return service.list();
     }
     
     @PostMapping("/todo")
     public ResponseEntity<Map<String, Object>> save(@RequestBody Todo todo) {
         Todo nuevoTodo = null;
-        Map<String, Object> response = new HashMap<>();
 
         try {
             nuevoTodo = service.save(todo);
         } catch (DataAccessException e) {
-            response.put("mensaje", "Error En La Consulta O Query Por Que Los Nombres No Coinciden");
+            response.put(MENSAJE, "Error En La Consulta O Query Por Que Los Nombres No Coinciden");
             response.put("error", Objects.requireNonNull(e.getMessage()).concat(": ").concat(e.getMostSpecificCause().getMessage()));
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
 
-        response.put("mensaje", "La Tarea Fue Creada Exitosamente!");
+        response.put(MENSAJE, "La Tarea Fue Creada Exitosamente!");
         response.put("todo", nuevoTodo);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @PutMapping("/todo")
-    public Todo update(@RequestBody Todo todo){
-        if(todo.getId() != null){
-            return service.save(todo);
+    @PutMapping("/todo/{id}")
+    public ResponseEntity<Map<String, Object>> update(@RequestBody Todo todo, @PathVariable Long id){
+        Todo todoActualizado = null;
+        Todo todoDB = service.get(id);
+
+        if (todoDB == null) {
+            response.put(MENSAJE, "Error, No Se Puede Editar La Tarea ID: ".concat(id.toString().concat(" No Existe!")));
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
         }
-        throw new RuntimeException("No existe el id para actualziar");
+
+        try {
+            todoDB.setName(todo.getName());
+            todoActualizado = service.save(todoDB);
+        } catch (DataAccessException e) {
+            response.put(MENSAJE, "Error En La Consulta O Query Por Que Los Nombres No Coinciden");
+            response.put("error", Objects.requireNonNull(e.getMessage()).concat(": ").concat(e.getMostSpecificCause().getMessage()));
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+
+        response.put(MENSAJE, "La Tarea Fue Actualizada Exitosamente!");
+        response.put("todo", todoActualizado);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @DeleteMapping(value = "/{id}/todo")
