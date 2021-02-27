@@ -1,14 +1,14 @@
 
-import React, { useContext, useReducer, useEffect, useRef, useState, createContext, Fragment } from 'react';
-
+// import React, { useContext, useReducer, useEffect, useRef, useState, createContext, Fragment } from 'react';
+import React from 'react';
 import Header from './components/Header';
 import Form from './components/Form';
 
-const HOST_API = "http://localhost:8080/api";
+/* const HOST_API = "http://localhost:8080/api";
 const initialState = {
   todo: { list: [], item: {} }
 };
-const Store = createContext(initialState)
+const Store = createContext(initialState) */
 
 /* const Form = () => {
   const formRef = useRef(null);
@@ -82,7 +82,7 @@ const Store = createContext(initialState)
  */
 
 
-const List = () => {
+/* const List = () => {
   const { dispatch, state: { todo } } = useContext(Store);
   const currentList = todo.list;
 
@@ -151,11 +151,9 @@ const List = () => {
       </tbody>
     </table>
   </div>
-}
+} */
 
-
-
-function reducer(state, action) {
+/* function reducer(state, action) {
   switch (action.type) {
     case 'update-item':
       const todoUpItem = state.todo;
@@ -198,17 +196,17 @@ const StoreProvider = ({ children }) => {
   return <Store.Provider value={{ state, dispatch }}>
     {children}
   </Store.Provider>
-}
+} */
+
+import { Provider } from 'react-redux';
+import store from './store';
 
 function App() {
   return (
-    <Fragment>
-      <Header />
-      <StoreProvider>
+      <Provider store={store}>
+        <Header />
         <Form />
-        <List />
-      </StoreProvider>
-    </Fragment>
+      </Provider>
   );
 }
 
