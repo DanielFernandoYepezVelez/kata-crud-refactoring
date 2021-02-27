@@ -1,11 +1,12 @@
+
 import React, { useContext, useReducer, useEffect, useRef, useState, createContext } from 'react';
+import Header from './components/Header';
 
 const HOST_API = "http://localhost:8080/api";
 const initialState = {
   todo: { list: [], item: {} }
 };
 const Store = createContext(initialState)
-
 
 const Form = () => {
   const formRef = useRef(null);
@@ -76,6 +77,7 @@ const Form = () => {
     {!item.id && <button onClick={onAdd}>Crear</button>}
   </form>
 }
+
 
 
 const List = () => {
@@ -194,15 +196,18 @@ const StoreProvider = ({ children }) => {
   return <Store.Provider value={{ state, dispatch }}>
     {children}
   </Store.Provider>
-
 }
 
 function App() {
-  return <StoreProvider>
-    <h3>To-Do List</h3>
-    <Form />
-    <List />
-  </StoreProvider>
+  return (
+    <div>
+      <Header />
+      <StoreProvider>
+        <Form />
+        <List />
+      </StoreProvider>
+    </div>
+  );
 }
 
 export default App;
