@@ -1,6 +1,8 @@
 
-import React, { useContext, useReducer, useEffect, useRef, useState, createContext } from 'react';
+import React, { useContext, useReducer, useEffect, useRef, useState, createContext, Fragment } from 'react';
+
 import Header from './components/Header';
+import Form from './components/Form';
 
 const HOST_API = "http://localhost:8080/api";
 const initialState = {
@@ -8,7 +10,7 @@ const initialState = {
 };
 const Store = createContext(initialState)
 
-const Form = () => {
+/* const Form = () => {
   const formRef = useRef(null);
   const { dispatch, state: { todo } } = useContext(Store);
   const item = todo.item;
@@ -77,7 +79,7 @@ const Form = () => {
     {!item.id && <button onClick={onAdd}>Crear</button>}
   </form>
 }
-
+ */
 
 
 const List = () => {
@@ -200,13 +202,13 @@ const StoreProvider = ({ children }) => {
 
 function App() {
   return (
-    <div>
+    <Fragment>
       <Header />
       <StoreProvider>
         <Form />
         <List />
       </StoreProvider>
-    </div>
+    </Fragment>
   );
 }
 
