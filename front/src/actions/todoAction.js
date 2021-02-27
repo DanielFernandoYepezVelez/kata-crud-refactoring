@@ -12,20 +12,6 @@ import {
 
 import axios from 'axios';
 const baseUrl = process.env.REACT_APP_API_URL;
-// const response = await axios.post(`${baseUrl}/task/crear`, task, { headers: {"Content-Type":"application/json"}});
-
-/* All Todos */
-export function allTodosAction() {
-    return async (dispatch) => {
-        dispatch(allTodos);
-        console.log("Obtener Las Tareas Cargando El Loading");
-    }
-}
-
-const allTodos = () => ({
-    type: START_DOWNLOAD_TODOS,
-    payload: true
-});
 
 /* Create New Todos */
 export function createNewTodoAction(todo) {
@@ -55,4 +41,35 @@ const createTodoSuccessfully = todo => ({
 const createTodoError = estado => ({
     type: CREATE_TODO_ERROR,
     payload: estado
+});
+
+/* All Todos */
+export function allTodosAction() {
+    return async (dispatch) => {
+        dispatch(allTodosLoading());
+        
+        try {
+            const response = await axios.get(`${baseUrl}/todos`, { headers: {"Content-Type":"application/json"}});
+            console.log(response.data);
+            dispatch(allTodosSuccessfully(response.data));
+        } catch (e) {
+            // console.log(e);
+            dispatch(allTodosError(true));
+        }
+    }
+}
+
+const allTodosLoading = () => ({
+    type: START_DOWNLOAD_TODOS,
+    payload: true,
+});
+
+const allTodosSuccessfully = todos => ({
+    type: DOWNLOAD_TODOS_SUCCESSFULLY,
+    payload: todos,
+});
+
+const allTodosError = estado => ({
+    type: DOWNLOAD_TODOS_ERROR,
+    payload: estado,
 });

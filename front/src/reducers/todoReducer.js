@@ -1,10 +1,10 @@
 import {
-    START_DOWNLOAD_TODOS,
-    DOWNLOAD_TODOS_SUCCESSFULLY,
-    DOWNLOAD_TODOS_ERROR,
     CREATE_TODO_LOADING,
     CREATE_TODO_SUCCESSFULLY,
     CREATE_TODO_ERROR,
+    START_DOWNLOAD_TODOS,
+    DOWNLOAD_TODOS_SUCCESSFULLY,
+    DOWNLOAD_TODOS_ERROR,
     GET_TODO_DELETE,
     TODO_DELETE_SUCCESSFULLY,
     TODO_DELETE_ERROR,
@@ -26,8 +26,11 @@ export default function(state = initialState, action) {
             return {...state, loading: action.payload }
         case CREATE_TODO_SUCCESSFULLY:
                 return {...state, loading: false, todos: [...state.todos, action.payload]}
+        case DOWNLOAD_TODOS_ERROR:
         case CREATE_TODO_ERROR:
             return {...state, loading: false, error: action.payload}
+        case DOWNLOAD_TODOS_SUCCESSFULLY:
+            return {...state, loading: false, todos: action.payload}
         default:
             return state;
     }

@@ -3,6 +3,7 @@
 import React from 'react';
 import Header from './components/Header';
 import Form from './components/Form';
+import Read from './components/Read';
 
 /* const HOST_API = "http://localhost:8080/api";
 const initialState = {
@@ -206,6 +207,7 @@ function App() {
       <Provider store={store}>
         <Header />
         <Form />
+        <Read />
       </Provider>
   );
 }
