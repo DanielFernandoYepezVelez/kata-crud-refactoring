@@ -28,7 +28,7 @@ const Form = () => {
                         name="nameTodo"
                         value={nameTodo} 
                         onChange={e => saveNameTodo(e.target.value)}/>
-                    <button type="submit">Crear Tarea</button>
+                    <button type="submit">Crear TO-DO</button>
                 </p>
             </form>
         </Fragment>
