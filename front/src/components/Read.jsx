@@ -1,8 +1,9 @@
 import React, { Fragment, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-
-import { allTodosAction } from '../actions/todoAction';
 import TodoMain from './TodoMain';
+
+/* Redux */
+import { useSelector, useDispatch } from 'react-redux';
+import { allTodosAction } from '../actions/todoAction';
 
 const Read = () => {
     const dispatch = useDispatch();

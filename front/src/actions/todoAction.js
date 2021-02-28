@@ -20,9 +20,9 @@ export function createNewTodoAction(todo) {
 
         try {
             const response = await axios.post(`${baseUrl}/todo`, { name: todo }, { headers: {"Content-Type":"application/json"}});
-            dispatch(createTodoSuccessfully(response.data));
+            dispatch(createTodoSuccessfully(response.data.todo));
         } catch (e) {
-            // console.log(e);
+            /* console.log(e); */
             dispatch(createTodoError(true));
         }
     }
@@ -50,10 +50,9 @@ export function allTodosAction() {
         
         try {
             const response = await axios.get(`${baseUrl}/todos`, { headers: {"Content-Type":"application/json"}});
-            console.log(response.data);
             dispatch(allTodosSuccessfully(response.data));
         } catch (e) {
-            // console.log(e);
+            /* console.log(e); */
             dispatch(allTodosError(true));
         }
     }
@@ -71,5 +70,34 @@ const allTodosSuccessfully = todos => ({
 
 const allTodosError = estado => ({
     type: DOWNLOAD_TODOS_ERROR,
+    payload: estado,
+});
+
+/* Delete TODO */
+export function deleteTodoAction(id) {
+    return async(dispatch) => {
+        dispatch(getTodoId(id));
+
+        try {
+            await axios.delete(`${baseUrl}/todo/${id}`);
+            dispatch(todoDeleteSuccessfully());
+        } catch (e) {
+            /* console.log(e); */
+            dispatch(todoDeleteError(true));
+        }
+    }
+}
+
+const getTodoId = todoID => ({
+    type: GET_TODO_DELETE,
+    payload: todoID,
+});
+
+const todoDeleteSuccessfully = () => ({
+    type: TODO_DELETE_SUCCESSFULLY,
+});
+
+const todoDeleteError = estado => ({
+    type: TODO_DELETE_ERROR,
     payload: estado,
 });
