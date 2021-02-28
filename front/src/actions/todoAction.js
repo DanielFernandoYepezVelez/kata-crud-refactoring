@@ -8,6 +8,10 @@ import {
     GET_TODO_DELETE,
     TODO_DELETE_SUCCESSFULLY,
     TODO_DELETE_ERROR,
+    GET_TODO_EDIT,
+    START_TODO_EDIT,
+    TODO_EDIT_SUCCESSFULLY,
+    TODO_EDIT_ERROR
 } from '../types/todoTypes';
 
 import axios from 'axios';
@@ -100,4 +104,36 @@ const todoDeleteSuccessfully = () => ({
 const todoDeleteError = estado => ({
     type: TODO_DELETE_ERROR,
     payload: estado,
+});
+
+/* Edit TODO */
+export function getEditTodoAction(todo) {
+    return (dispatch) => {
+        dispatch(getTodoEdit(todo));
+    }
+}
+
+/* Aqui Solo Obtengo El TODO Para Asignarlo En El Store */
+const getTodoEdit = todo => ({
+    type: GET_TODO_EDIT,
+    payload: todo,
+});
+
+export function editTodoAction(todo) {
+    return async(dispatch) => {
+        dispatch(editTodo(todo));
+
+        try {
+            console.log("todo desde el action", todo);
+            // const response = await axios.put(`${baseUrl}/todo/${todo.id}`, todo, { headers: {"Content-Type":"application/json"}});
+            // console.log(response);
+        } catch (e) {
+            console.log(e);
+        }
+    }
+}
+
+const editTodo = todo => ({
+    type: START_TODO_EDIT,
+    payload: todo,
 });

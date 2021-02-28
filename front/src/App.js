@@ -202,13 +202,21 @@ const StoreProvider = ({ children }) => {
 import { Provider } from 'react-redux';
 import store from './store';
 
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+
 function App() {
   return (
+    <Router>
       <Provider store={store}>
         <Header />
-        <Form />
-        <Read />
+        <div>
+          <Switch>
+            <Route exact path='/' component={Form}/>
+            <Route exact path='/todoUpdate/:id' component={Form}/>
+          </Switch>
+        </div>
       </Provider>
+    </Router>
   );
 }
 

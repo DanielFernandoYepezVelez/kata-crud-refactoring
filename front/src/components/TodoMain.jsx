@@ -1,29 +1,32 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 
 /* Redux */
 import { useDispatch } from 'react-redux';
-import { deleteTodoAction } from '../actions/todoAction';
+import { deleteTodoAction, getEditTodoAction } from '../actions/todoAction';
 
 const TodoMain = ({todo}) => {
-    const { id } = todo;
+    const { id, name } = todo;
     const dispatch = useDispatch();
+    const history = useHistory();
 
     const confirmDeleteTodo = todoID => {
         dispatch(deleteTodoAction(todoID));
     }
 
-    const confirmEditTodo = todoID => {
-        console.log(todoID);
+    const confirmEditTodo = todoUpdate => {
+        dispatch(getEditTodoAction(todoUpdate));
+        history.push(`/todoUpdate/${todoUpdate.id}`);
     }
 
     return ( 
         <tr>
-            <td className="id">{todo.id}</td>
-            <td className="center">{todo.name}</td>
+            <td className="id">{id}</td>
+            <td className="center">{name}</td>
             <td className="check"><input type="checkbox" name="#" id="#" /></td>
             <td>
-                <button className="delete" onClick={() => confirmDeleteTodo(id)}>Eliminar</button>
-                <button className="edit" onClick={() => confirmEditTodo(id)}>Editar</button>
+                <button type="button" className="delete" onClick={() => confirmDeleteTodo(id)}>Eliminar</button>
+                <button type="button" className="edit" onClick={() => confirmEditTodo(todo)}>Editar</button>
             </td>
         </tr>
      );

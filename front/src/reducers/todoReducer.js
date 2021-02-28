@@ -8,6 +8,9 @@ import {
     GET_TODO_DELETE,
     TODO_DELETE_SUCCESSFULLY,
     TODO_DELETE_ERROR,
+    GET_TODO_EDIT,
+    TODO_EDIT_SUCCESSFULLY,
+    TODO_EDIT_ERROR
 } from '../types/todoTypes';
 
 /* Que Propiedades Debe Tener El State De TO-DO-List */
@@ -15,7 +18,8 @@ const initialState = {
     todos: [],
     error: null,
     loading: false,
-    todoDelete: null
+    todoDelete: null,
+    todoEdit: null,
 }
 
 // eslint-disable-next-line import/no-anonymous-default-export
@@ -28,6 +32,7 @@ export default function(state = initialState, action) {
                 return {...state, loading: false, todos: [...state.todos, action.payload] }
         case DOWNLOAD_TODOS_ERROR:
         case CREATE_TODO_ERROR:
+        case TODO_DELETE_ERROR:
             return {...state, loading: false, error: action.payload }
         case DOWNLOAD_TODOS_SUCCESSFULLY:
             return {...state, loading: false, todos: action.payload }
@@ -35,6 +40,8 @@ export default function(state = initialState, action) {
             return {...state, todoDelete: action.payload }
         case TODO_DELETE_SUCCESSFULLY:
             return {...state, todos: state.todos.filter(todo => todo.id !== state.todoDelete), todoDelete: null }
+        case GET_TODO_EDIT:
+            return {...state, todoEdit: action.payload }
         default:
             return state;
     }

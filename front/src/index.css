@@ -12,6 +12,11 @@ code {
     monospace;
 }
 
+.label {
+  color: rgb(52, 121, 20);
+  font-weight: 700;
+}
+
 .title {
   text-align: center;
   font-weight: bold;
