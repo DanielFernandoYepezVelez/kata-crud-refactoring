@@ -124,11 +124,11 @@ export function editTodoAction(todo) {
         dispatch(editTodo(todo));
 
         try {
-            console.log("todo desde el action", todo);
-            // const response = await axios.put(`${baseUrl}/todo/${todo.id}`, todo, { headers: {"Content-Type":"application/json"}});
-            // console.log(response);
+            await axios.put(`${baseUrl}/todo/${todo.id}`, todo, { headers: {"Content-Type":"application/json"}});
+            dispatch(editTodoSuccessfully(null));
         } catch (e) {
-            console.log(e);
+            // console.log(e);
+            dispatch(editTodoError(true));
         }
     }
 }
@@ -136,4 +136,14 @@ export function editTodoAction(todo) {
 const editTodo = todo => ({
     type: START_TODO_EDIT,
     payload: todo,
+});
+
+const editTodoSuccessfully = todoEdit => ({
+    type: TODO_EDIT_SUCCESSFULLY,
+    payload: todoEdit,
+});
+
+const editTodoError = estado => ({
+    type: TODO_EDIT_ERROR,
+    payload: estado
 });

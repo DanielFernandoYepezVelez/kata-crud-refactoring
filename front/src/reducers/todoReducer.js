@@ -33,6 +33,7 @@ export default function(state = initialState, action) {
         case DOWNLOAD_TODOS_ERROR:
         case CREATE_TODO_ERROR:
         case TODO_DELETE_ERROR:
+        case TODO_EDIT_ERROR:    
             return {...state, loading: false, error: action.payload }
         case DOWNLOAD_TODOS_SUCCESSFULLY:
             return {...state, loading: false, todos: action.payload }
@@ -42,6 +43,8 @@ export default function(state = initialState, action) {
             return {...state, todos: state.todos.filter(todo => todo.id !== state.todoDelete), todoDelete: null }
         case GET_TODO_EDIT:
             return {...state, todoEdit: action.payload }
+        case TODO_EDIT_SUCCESSFULLY:
+            return {...state, todoEdit: action.payload }    
         default:
             return state;
     }

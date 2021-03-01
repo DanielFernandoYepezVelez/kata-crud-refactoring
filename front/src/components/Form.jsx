@@ -27,9 +27,9 @@ const Form = () => {
         }
 
         if (todoUpdate) {
-            if (todoUpdate.name.trim() === '') return;
-            console.log("Actualizando Correctamente");
-            // addTodoUpdate(todoUpdate);
+            if (updateTodo.trim() === '') return;
+            todoUpdate.name = updateTodo;
+            addTodoUpdate(todoUpdate);
             updateNameTodo('');
         }
 
