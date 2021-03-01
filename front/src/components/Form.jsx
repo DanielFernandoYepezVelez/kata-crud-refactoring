@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import Read from './Read';
 
@@ -8,50 +8,77 @@ import { createNewTodoAction, editTodoAction } from '../actions/todoAction';
 
 const Form = () => {
     const [nameTodo, saveNameTodo] = useState('');
-    const [updateTodo, updateNameTodo] = useState('');
     const history = useHistory();
-
-    const todoUpdate = useSelector(state => state.todos.todoEdit);
-    const addTodoUpdate = newTodo => dispatch(editTodoAction(newTodo));
 
     const dispatch = useDispatch();
     const addTodo = todo => dispatch(createNewTodoAction(todo));
 
     const submitTodo = e => {
         e.preventDefault();
+        if (nameTodo.trim() === '') { return; }
+        addTodo(nameTodo);
+        saveNameTodo('');
+        history.push('/');
+    }
 
+    /* ======== AQUI EMPIEZA EL EDITAR ========== */
+    const [updateTodo, updateCompleteTodo] = useState({ name: '' });
+    const todoUpdate = useSelector(state => state.todos.todoEdit);
+
+    /* Lleno El Segundo State Depues De Consultar El Store */
+    useEffect(() => {
         if (!todoUpdate) {
-            if (nameTodo.trim() === '') return;
-            addTodo(nameTodo);
-            saveNameTodo('');
+            return;
         }
+        updateCompleteTodo(todoUpdate);
+    }, [todoUpdate]);
 
-        if (todoUpdate) {
-            if (updateTodo.trim() === '') return;
-            todoUpdate.name = updateTodo;
-            addTodoUpdate(todoUpdate);
-            updateNameTodo('');
-        }
+    /* Aqui Leo Los Datos Que Estan En El Formulario Depues De Dar Click En Editar */
+    /* Nota => El Valor Del name Del Input Es Igual Al name Del Objeto updateTodo */
+    const onChangeTodoUpdate = e => {
+        updateCompleteTodo({
+            ...updateTodo,
+            [e.target.name]: e.target.value
+        });
+    }
 
+    const submitTodoUpdate = e => {
+        e.preventDefault();
+        if (updateTodo.name.trim() === '') { return; }
+        dispatch(editTodoAction(updateTodo))
         history.push('/');
     }
 
 
     return (
         <Fragment>
-            <form onSubmit={submitTodo}>
-                <label className="label">{todoUpdate === null ? '' : `TO-DO: ${todoUpdate.name}`}</label>
-                <p>
-                    <input
-                        type="text"
-                        required
-                        placeholder= {todoUpdate === null ? "¿Qué piensas hacer hoy?" : "Editar Todo!"}
-                        name={todoUpdate === null ? "nameTodo" : "updateTodo"}
-                        value={todoUpdate === null ? nameTodo : updateTodo}
-                        onChange={todoUpdate === null ? e => saveNameTodo(e.target.value) : e => updateNameTodo(e.target.value)} />
-                    <button type="submit">{todoUpdate === null ? "Crear TO-DO" : "Actualizar TO-DO"}</button>
-                </p>
-            </form>
+            {todoUpdate === null ? (
+                <form onSubmit={submitTodo}>
+                    <p>
+                        <input
+                            type="text"
+                            required
+                            placeholder="¿Qué piensas hacer hoy?"
+                            name="nameTodo"
+                            value={nameTodo}
+                            onChange={e => saveNameTodo(e.target.value)} />
+                        <button type="submit">Crear TO-DO</button>
+                    </p>
+                </form>
+            ) : (
+                    <form onSubmit={submitTodoUpdate}>
+                        <p>
+                            <input
+                                type="text"
+                                required
+                                placeholder="Editar Todo!"
+                                name="name"
+                                value={updateTodo.name}
+                                onChange={onChangeTodoUpdate} />
+                            <button type="submit">Actualizar TO-DO</button>
+                        </p>
+                    </form>
+                )}
             <Read />
         </Fragment>
     );

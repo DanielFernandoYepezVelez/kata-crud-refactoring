@@ -123,11 +123,11 @@ const getTodoEdit = todo => ({
 /* Aqui Actualizo Solo El Nombre De La Tarea */
 export function editTodoAction(todo) {
     return async(dispatch) => {
-        dispatch(editTodo(todo));
+        dispatch(editTodo());
 
         try {
-            await axios.put(`${baseUrl}/todo/${todo.id}`, todo, { headers: {"Content-Type":"application/json"}});
-            dispatch(editTodoSuccessfully(null));
+            const response = await axios.put(`${baseUrl}/todo/${todo.id}`, todo, { headers: {"Content-Type":"application/json"}});
+            dispatch(editTodoSuccessfully(response.data.todo));
         } catch (e) {
             // console.log(e);
             dispatch(editTodoError(true));
@@ -135,9 +135,8 @@ export function editTodoAction(todo) {
     }
 }
 
-const editTodo = todo => ({
+const editTodo = () => ({
     type: START_TODO_EDIT,
-    payload: todo,
 });
 
 const editTodoSuccessfully = todoEdit => ({

@@ -9,6 +9,7 @@ import {
     TODO_DELETE_SUCCESSFULLY,
     TODO_DELETE_ERROR,
     GET_TODO_EDIT,
+    START_TODO_EDIT,
     TODO_EDIT_SUCCESSFULLY,
     TODO_EDIT_ERROR,
     CHECKED_TODO_UPDATE
@@ -44,8 +45,11 @@ export default function(state = initialState, action) {
             return {...state, todos: state.todos.filter(todo => todo.id !== state.todoDelete), todoDelete: null }
         case GET_TODO_EDIT:
             return {...state, todoEdit: action.payload }
+        case START_TODO_EDIT:
+            return {...state}
         case TODO_EDIT_SUCCESSFULLY:
-            return {...state, todoEdit: action.payload }
+            /* Tomo Todos Los TO-DOs Del State, Me Paro En Cada Uno De Ellos E Itero, Si El id Es Igual Al Que Tengo En El Payload, Hago El Cambio, Si No "NO" */
+            return {...state, todos: state.todos.map(todo => (todo.id === action.payload.id) ? todo = action.payload : todo), todoEdit: null, }
         case CHECKED_TODO_UPDATE:
                 return {...state}  
         default:
