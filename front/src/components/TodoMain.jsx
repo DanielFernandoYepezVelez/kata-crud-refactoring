@@ -6,8 +6,9 @@ import { useDispatch } from 'react-redux';
 import { deleteTodoAction, getEditTodoAction, checkedTodoAction } from '../actions/todoAction';
 
 const TodoMain = ({todo}) => {
-    const [checkbox, setcheckbox] = useState(todo.completed);
     const { id, name, completed } = todo;
+    
+    const [checkbox, setcheckbox] = useState(todo.completed);
     const history = useHistory();
     const dispatch = useDispatch();
 

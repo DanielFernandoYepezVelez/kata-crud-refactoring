@@ -46,12 +46,11 @@ export default function(state = initialState, action) {
         case GET_TODO_EDIT:
             return {...state, todoEdit: action.payload }
         case START_TODO_EDIT:
+        case CHECKED_TODO_UPDATE:
             return {...state}
         case TODO_EDIT_SUCCESSFULLY:
             /* Tomo Todos Los TO-DOs Del State, Me Paro En Cada Uno De Ellos E Itero, Si El id Es Igual Al Que Tengo En El Payload, Hago El Cambio, Si No "NO" */
             return {...state, todos: state.todos.map(todo => (todo.id === action.payload.id) ? todo = action.payload : todo), todoEdit: null, }
-        case CHECKED_TODO_UPDATE:
-                return {...state}  
         default:
             return state;
     }
