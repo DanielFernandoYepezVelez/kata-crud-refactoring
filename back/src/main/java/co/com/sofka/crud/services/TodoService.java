@@ -19,7 +19,9 @@ public class TodoService {
     }
 
     @Transactional
-    public Todo save(Todo todo){ return repository.save(todo); }
+    public Todo save(Todo todo){
+        return repository.save(todo);
+    }
 
     public void delete(Long id){
         repository.delete(get(id));
