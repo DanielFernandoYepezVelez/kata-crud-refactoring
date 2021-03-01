@@ -10,7 +10,8 @@ import {
     TODO_DELETE_ERROR,
     GET_TODO_EDIT,
     TODO_EDIT_SUCCESSFULLY,
-    TODO_EDIT_ERROR
+    TODO_EDIT_ERROR,
+    CHECKED_TODO_UPDATE
 } from '../types/todoTypes';
 
 /* Que Propiedades Debe Tener El State De TO-DO-List */
@@ -44,7 +45,9 @@ export default function(state = initialState, action) {
         case GET_TODO_EDIT:
             return {...state, todoEdit: action.payload }
         case TODO_EDIT_SUCCESSFULLY:
-            return {...state, todoEdit: action.payload }    
+            return {...state, todoEdit: action.payload }
+        case CHECKED_TODO_UPDATE:
+                return {...state}  
         default:
             return state;
     }

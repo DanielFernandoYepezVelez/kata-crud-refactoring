@@ -11,7 +11,8 @@ import {
     GET_TODO_EDIT,
     START_TODO_EDIT,
     TODO_EDIT_SUCCESSFULLY,
-    TODO_EDIT_ERROR
+    TODO_EDIT_ERROR,
+    CHECKED_TODO_UPDATE
 } from '../types/todoTypes';
 
 import axios from 'axios';
@@ -119,6 +120,7 @@ const getTodoEdit = todo => ({
     payload: todo,
 });
 
+/* Aqui Actualizo Solo El Nombre De La Tarea */
 export function editTodoAction(todo) {
     return async(dispatch) => {
         dispatch(editTodo(todo));
@@ -146,4 +148,21 @@ const editTodoSuccessfully = todoEdit => ({
 const editTodoError = estado => ({
     type: TODO_EDIT_ERROR,
     payload: estado
+});
+
+/* Aqui Actualizo Solo El Completed De La Tarea */
+export function checkedTodoAction(todo) {
+    return async (dispatch) => {
+
+        try {
+            await axios.put(`${baseUrl}/todo/${todo.id}`, todo, { headers: {"Content-Type":"application/json"}});
+            dispatch(checkboxTodo());
+        } catch (e) {
+            // console.log(e);
+        }
+    }
+}
+
+const checkboxTodo = () => ({
+    type: CHECKED_TODO_UPDATE
 });

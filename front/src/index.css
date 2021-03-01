@@ -23,6 +23,10 @@ code {
   font-size: 1.2rem;
 }
 
+.checkedTodo {
+  text-decoration: line-through;
+}
+
 .tareaPrincipal {
   margin-bottom: 1rem;
 }
